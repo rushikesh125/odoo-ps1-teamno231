@@ -167,7 +167,6 @@ const SignupForm = () => {
           displayName: result.user.displayName,
           photoURL: result.user.photoURL,
           role:result.user.role,
-          emailVerified: result.user.emailVerified
         }));
         
         toast.success('Account created successfully');

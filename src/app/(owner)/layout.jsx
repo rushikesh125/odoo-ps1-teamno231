@@ -20,9 +20,59 @@ import OwnerDashboardLayout from "@/components/OwnerDashboard";
 const RootUserLayout = ({ children }) => {
     const user = useSelector((state) => state.user);
     const [role, setRole] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const dispatch = useDispatch();
     const router = useRouter()
+
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            if (!user || !user.uid) {
+                setLoading(false);
+                return;
+            }
+
+            try {
+                setLoading(true);
+                setError(null);
+
+                const result = await getUserRole(user.uid);
+
+                if (result.success) {
+                    setRole(result.role);
+                } else {
+                    setError(result.error);
+                    toast.error('Failed to load user role');
+                }
+            } catch (err) {
+                console.error('Error fetching user role:', err);
+                setError('Failed to load user information');
+                toast.error('Failed to load user information');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserRole();
+    }, [user]);
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log(user)
+                let tempuser = {
+                    uid: user?.uid,
+                    displayName: user?.displayName,
+                    email: user.email,
+                    photoURL: user.photoURL,
+                    role: user.role
+                };
+                dispatch(addUser(tempuser));
+            } else {
+                dispatch(clearUser());
+            }
+        });
+        return () => unsubscribe();
+    }, []);
 
     // Show login prompt if user is not logged in
     if (!user) {
@@ -43,6 +93,7 @@ const RootUserLayout = ({ children }) => {
         );
     }
 
+  
 
     // Show error if failed to fetch role
     if (error) {
@@ -59,16 +110,25 @@ const RootUserLayout = ({ children }) => {
         );
     }
 
+    // Render role-specific dashboard
+    if (role === 'facility_owner') {
+        return (
+            <OwnerDashboardLayout>
+                {children}
+            </OwnerDashboardLayout>
+        );
+    }
+
 
     return (
         <>
             <NavBar />
-            <div className="py-20 ">
-                {children}
+            <div className="py-20 h-screen w-screen flex justify-center items-center gap-2 flex-col text-2xl text-accent-color">
+
+                <div className="text-center">You are not logged in as Facility Owner.</div>
             </div>
         </>
-    );
-
+    )
 };
 
 export default RootUserLayout;

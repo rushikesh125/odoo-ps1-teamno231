@@ -1,8 +1,8 @@
 import React from 'react'
 
-const UserDashboard = () => {
+const UserDashboard = ({children}) => {
   return (
-    <div>UserDashboard</div>
+    {children}
   )
 }
 

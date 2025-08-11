@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  LayoutDashboard, 
-  Users, 
-  Settings, 
-  LogOut, 
-  Menu, 
+import {
+  LayoutDashboard,
+  Users,
+  Settings,
+  LogOut,
+  Menu,
   X,
   Bell,
   Search,
@@ -14,17 +14,18 @@ import {
   BarChart3,
   MessageSquare,
   Calendar,
-  User
+  User,
+  Layers,
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import UserDropdown from './UserDropdown';
 
 export default function OwnerDashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
   const handleLogout = () => {
@@ -40,14 +41,13 @@ export default function OwnerDashboardLayout({ children }) {
   const menuItems = [
     { name: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
     { name: 'Users', icon: Users, href: '/dashboard/users' },
-    { name: 'Analytics', icon: BarChart3, href: '/dashboard/analytics' },
+    { name: 'Facilities', icon: BarChart3, href: '/dashboard/facilities' },
     { name: 'Documents', icon: FileText, href: '/dashboard/documents' },
     { name: 'Messages', icon: MessageSquare, href: '/dashboard/messages' },
     { name: 'Calendar', icon: Calendar, href: '/dashboard/calendar' },
     { name: 'Settings', icon: Settings, href: '/dashboard/settings' },
   ];
 
-  // Close sidebar when resizing to large screens
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
@@ -60,29 +60,30 @@ export default function OwnerDashboardLayout({ children }) {
   }, []);
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Mobile sidebar overlay */}
+    <div className="flex h-screen bg-gray-50 text-gray-800">
+      {/* Sidebar Backdrop (Mobile) */}
       {sidebarOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-black bg-opacity-20 lg:hidden"
+        <div
+          className="fixed inset-0 z-40 bg-black bg-opacity-30 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <aside 
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 text-gray-700 transition-transform duration-300 ease-in-out transform ${
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 shadow-sm flex flex-col transition-transform duration-300 ease-in-out transform ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 lg:static lg:inset-0 flex flex-col`}
+        } lg:translate-x-0 lg:static lg:w-60`}
       >
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        {/* Logo Section */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
-              <span className="text-indigo-600 font-bold text-lg">D</span>
+            <div className="p-2 bg-indigo-50 rounded-xl">
+              <Layers className="text-theme-purple" size={24} />
             </div>
-            <span className="text-xl font-semibold text-gray-800">Dashboard</span>
+            <span className="text-xl font-semibold text-theme-purple tracking-tight">QUICKCOURT</span>
           </div>
-          <button 
+          <button
             className="lg:hidden text-gray-500 hover:text-gray-700"
             onClick={() => setSidebarOpen(false)}
           >
@@ -90,50 +91,58 @@ export default function OwnerDashboardLayout({ children }) {
           </button>
         </div>
 
+        {/* Navigation */}
         <nav className="flex-1 p-4 overflow-y-auto">
           <ul className="space-y-1">
             {menuItems.map((item) => (
               <li key={item.name}>
                 <a
                   href={item.href}
-                  className="flex items-center p-3 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-indigo-600 transition-colors"
+                  className="flex items-center p-3 rounded-xl text-gray-600 0 hover:text-theme-purple transition-all duration-200 group"
                 >
-                  <item.icon size={20} className="mr-3" />
-                  <span>{item.name}</span>
+                  <item.icon
+                    size={20}
+                    className="mr-3 text-gray-500 group-hover:text-indigo-600"
+                  />
+                  <span className="font-medium">{item.name}</span>
                 </a>
               </li>
             ))}
           </ul>
         </nav>
 
-        <div className="p-4 border-t border-gray-200">
-          <div className="flex items-center p-3 mb-2">
-            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
-              {user?.name?.charAt(0) || <User size={20} />}
+        {/* User Section */}
+        <div className="p-4 border-t border-gray-100">
+          <div className="flex items-center mb-3">
+            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-medium">
+              {user?.name?.charAt(0)?.toUpperCase() || <User size={16} />}
             </div>
             <div className="ml-3">
-              <p className="text-sm font-medium text-gray-800 truncate">{user?.name || 'User'}</p>
-              <p className="text-xs text-gray-500 truncate">{user?.email || 'user@example.com'}</p>
+              <p className="text-sm font-semibold text-gray-800 truncate">
+                {user?.name || 'Owner'}
+              </p>
+              <p className="text-xs text-gray-500 truncate">{user?.email || 'user@quickcourt.com'}</p>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center w-full p-3 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-red-500 transition-colors"
+            className="flex items-center w-full p-3 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all duration-200 text-sm"
           >
-            <LogOut size={20} className="mr-3" />
+            <LogOut size={18} className="mr-3" />
             <span>Logout</span>
           </button>
         </div>
       </aside>
 
-      {/* Main content */}
+      {/* Main Content */}
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200">
-          <div className="flex items-center justify-between p-4">
+        <header className="bg-white border-b border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between px-4 py-3">
+            {/* Mobile Menu Toggle */}
             <div className="flex items-center">
               <button
-                className="mr-4 text-gray-500 hover:text-gray-700 lg:hidden"
+                className="mr-3 text-gray-600 lg:hidden hover:text-indigo-600"
                 onClick={() => setSidebarOpen(true)}
               >
                 <Menu size={24} />
@@ -141,38 +150,37 @@ export default function OwnerDashboardLayout({ children }) {
               <h1 className="text-lg font-semibold text-gray-800">Dashboard</h1>
             </div>
 
-            <div className="flex items-center space-x-4">
+            {/* Right Side Actions */}
+            <div className="flex items-center space-x-3">
+              {/* Search Bar (Medium+ screens) */}
               <div className="relative hidden md:block">
+                <Search className="absolute left-3 top-2.5 text-gray-400" size={16} />
                 <input
                   type="text"
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 w-64 text-sm"
+                  className="pl-10 pr-4 py-2 w-56 rounded-xl border border-gray-300 focus:outline-none focus:ring-1 focus:ring-indigo-200 focus:border-indigo-300 text-sm transition-all"
                 />
-                <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
               </div>
 
-              <button className="relative p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100">
+              {/* Notifications */}
+              <button className="p-2 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-all">
                 <Bell size={20} />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
 
-              <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
-                  {user?.name?.charAt(0) || <User size={18} />}
-                </div>
-                <span className="ml-2 hidden md:inline text-sm font-medium text-gray-700">
-                  {user?.name || 'User'}
-                </span>
+              {/* User Dropdown */}
+              <div className="ml-2">
+                <UserDropdown user={user} />
               </div>
             </div>
           </div>
         </header>
 
-        {/* Content */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
-          {children}
+        {/* Page Content */}
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
+          <div className="max-w-full">{children}</div>
         </main>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import ReduxProvider from "@/components/ReduxProvider";
 import NavBar from "@/components/Navbar";
 import HeroProvider from "@/components/HeroProvider";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,11 +32,11 @@ export default function RootLayout({ children }) {
 
           <ReduxProvider>
             {/* <NavBar /> */}
-            <div className="py-20">
+            <div className="">
               {children}
             </div>
           </ReduxProvider>
-
+        <Footer/>
           <Toaster />
 
         </HeroProvider>
