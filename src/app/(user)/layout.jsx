@@ -8,6 +8,7 @@ import { toast } from 'react-hot-toast';
 import CircularLoader from "../loading";
 import OwnerDashboard from "@/components/OwnerDashboard";
 import UserDashboard from "@/components/UserDashboard";
+import OwnerDashboardLayout from "@/components/OwnerDashboard";
 
 const UserLayout = ({ children }) => {
   const user = useSelector((state) => state.user);
@@ -88,14 +89,18 @@ const UserLayout = ({ children }) => {
   // Render role-specific dashboard
   if (role === 'facility_owner') {
     return (
-      <OwnerDashboard/>
+      <OwnerDashboardLayout>
+        {children}
+      </OwnerDashboardLayout>
     );
   }
 
   // Default user dashboard
   if (role === 'user') {
     return (
-      <UserDashboard/>
+      <UserDashboard>
+        {children}
+      </UserDashboard>
     );
   }
 

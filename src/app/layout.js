@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
         <HeroProvider>
 
           <ReduxProvider>
-            <NavBar />
+            {/* <NavBar /> */}
             <div className="py-20">
               {children}
             </div>
