@@ -1,6 +1,7 @@
 // firebase/user/read.js
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../config';
+import useSWRSubscription from 'swr/subscription';
 
 export const getUserById = async (uid) => {
   try {
@@ -44,3 +45,28 @@ export const getUserRole = async (uid) => {
     return { success: false, error: error.message };
   }
 };
+
+export function useUser({ uid }) {
+  // Subscribe to Firestore collection using SWRSubscription
+  const { data, error } = useSWRSubscription(
+    ["users", uid], // Key to identify this subscription
+    ([path, uid], { next }) => {
+      // Define Firestore collection reference
+      const ref = doc(db, `users/${uid}`);
+      // Setup Firestore listener
+      const unsub = onSnapshot(
+        ref,
+        (snapshot) => next(null, snapshot.exists() ? snapshot.data() : null),
+        (err) => next(err, null)
+      );
+
+      return () => unsub();
+    }
+  );
+
+  return {
+    data: data,
+    error: error?.message,
+    isLoading: data === undefined,
+  };
+}

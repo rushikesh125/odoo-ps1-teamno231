@@ -1,5 +1,7 @@
 "use client";
 import {
+  BookOpenCheck,
+  BookOpenText,
   ChevronDown,
   HelpCircle,
   LogOut,
@@ -82,10 +84,13 @@ const UserDropdown = ({ user }) => {
                 <User className="w-4 h-4" />
                 Profile
               </Link>
-              <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                <Settings className="w-4 h-4" />
-                Settings
-              </button>
+              <Link
+                href={`/mybookings`}
+                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+              >
+                <BookOpenText className="w-4 h-4" />
+                Bookings
+              </Link>
               <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
                 <Shield className="w-4 h-4" />
                 Privacy

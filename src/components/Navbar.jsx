@@ -72,7 +72,7 @@ const NavBar = () => {
     { name: "Home", href: "/" },
     { name: "Explore", href: "/explore" },
     { name: "Facilities", href: "/facilities" },
-    { name: "Bookings", href: "/bookings" },
+    { name: "Bookings", href: "/mybookings" },
   ];
 
   const isActive = (path) => pathname === path;

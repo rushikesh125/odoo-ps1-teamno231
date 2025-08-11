@@ -11,15 +11,23 @@ import {
   Phone,
   Mail,
   Navigation,
+  Calendar,
+  User,
+  Loader2,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
+
+// Components
 import NavBar from "@/components/Navbar";
 import FacilityImageGallery from "@/components/FacilityImageGallery";
 import SportScheduleCard from "@/components/SportScheduleCard";
 import CourtCard from "@/components/CourtCard";
 import BookingModal from "@/components/BookingModal";
-import { useFacility } from "@/firebase/facilities/read_hooks";
+import AddReview from "@/components/AddReview";
 
+// Firebase hooks
+import { useFacility } from "@/firebase/facilities/read_hooks";
+import { useReviews } from "@/firebase/reviews/read_hook";
 
 const FacilityDetailPage = () => {
   const params = useParams();
@@ -27,8 +35,9 @@ const FacilityDetailPage = () => {
   const user = useSelector((state) => state.user);
   const facilityId = params.fid;
 
-  // Fetch facility (includes sports and embedded courts)
-  const { data: facility, isLoading, error } = useFacility({ facilityId });
+  // Fetch facility and reviews separately
+  const { data: facility, isLoading: facilityLoading, error: facilityError } = useFacility({ facilityId });
+  const { reviews, isLoading: reviewsLoading } = useReviews(facilityId);
 
   const [selectedSport, setSelectedSport] = useState(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -60,7 +69,7 @@ const FacilityDetailPage = () => {
   };
 
   // Loading state
-  if (isLoading) {
+  if (facilityLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
         <NavBar />
@@ -72,7 +81,7 @@ const FacilityDetailPage = () => {
   }
 
   // Error or not found
-  if (error || !facility) {
+  if (facilityError || !facility) {
     return (
       <div className="min-h-screen bg-gray-50">
         <NavBar />
@@ -97,83 +106,97 @@ const FacilityDetailPage = () => {
     );
   }
 
-  // Calculate average rating
-  const averageRating = facility.reviews?.length
-    ? (facility.reviews.reduce((sum, r) => sum + r.rating, 0) / facility.reviews.length).toFixed(1)
+  // Calculate average rating from actual reviews
+  const averageRating = reviews?.length
+    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
     : "0.0";
 
   return (
     <div className="min-h-screen bg-gray-50">
       <NavBar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-25">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
         <nav className="flex text-sm mb-6">
-          <a href="/" className="text-gray-600 hover:text-theme-purple">Home</a>
+          <a href="/" className="text-gray-600 hover:text-theme-purple transition-colors">Home</a>
           <span className="mx-2 text-gray-400">/</span>
-          <a href="/explore" className="text-gray-600 hover:text-theme-purple">Facilities</a>
+          <a href="/explore" className="text-gray-600 hover:text-theme-purple transition-colors">Facilities</a>
           <span className="mx-2 text-gray-400">/</span>
           <span className="text-gray-500">{facility.name}</span>
         </nav>
 
         {/* Header */}
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
           <FacilityImageGallery images={facility.photos || []} />
 
-          <div className="p-6">
-            <div className="flex flex-col md:flex-row md:justify-between">
+          <div className="p-6 md:p-8">
+            <div className="flex flex-col md:flex-row md:justify-between gap-6">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">{facility.name}</h1>
-                <div className="flex items-center text-gray-600 mt-2">
-                  <MapPin size={18} className="mr-1" />
-                  <span className="text-sm">
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{facility.name}</h1>
+                <div className="flex items-center text-gray-600 mb-4">
+                  <MapPin size={18} className="mr-2 text-theme-purple" />
+                  <span className="text-sm md:text-base">
                     {facility.location?.address}, {facility.location?.city}, {facility.location?.state}
                   </span>
                 </div>
 
-                <div className="flex flex-wrap gap-4 mt-4">
+                <div className="flex flex-wrap gap-4 mb-6">
                   <div className="flex items-center gap-1">
                     <Star className="text-yellow-500 fill-current" size={18} />
                     <span className="font-medium">{averageRating}</span>
-                    <span className="text-gray-500 text-sm">({facility.reviews?.length || 0} reviews)</span>
+                    <span className="text-gray-500 text-sm">({reviews?.length || 0} reviews)</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Users size={18} className="text-gray-500" />
+                    <Users size={18} className="text-theme-purple" />
                     <span className="text-gray-600 text-sm">{facility.sports?.length} Sports</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Clock size={18} className="text-gray-500" />
+                    <Clock size={18} className="text-theme-purple" />
                     <span className="text-gray-600 text-sm">Open Now</span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3 mt-4">
+              <div className="flex flex-col sm:flex-row gap-3 self-start">
                 <button
                   onClick={handleViewMap}
-                  className="flex items-center px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                  className="flex items-center justify-center px-5 py-3 bg-white border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 hover:shadow-md transition-all transform hover:-translate-y-0.5"
                 >
-                  <Navigation size={16} className="mr-2" />
-                  View Map
+                  <Navigation size={18} className="mr-2 text-theme-purple" />
+                  <span className="font-medium">View on Map</span>
                 </button>
                 <button
                   onClick={() => router.push(`/contact?facility=${facilityId}`)}
-                  className="flex items-center px-4 py-2 bg-theme-purple text-white rounded-md hover:bg-indigo-700"
+                  className="flex items-center justify-center px-5 py-3 bg-theme-purple text-white rounded-xl hover:bg-indigo-700 hover:shadow-lg transition-all transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-theme-purple focus:ring-opacity-50"
                 >
-                  <Mail size={16} className="mr-2" />
-                  Contact
+                  <Mail size={18} className="mr-2" />
+                  <span className="font-medium">Contact</span>
                 </button>
               </div>
             </div>
 
-            <p className="text-gray-700 mt-4">{facility.description}</p>
+            <p className="text-gray-700 mb-6">{facility.description}</p>
 
-            <div className="flex flex-wrap gap-2 mt-4">
+            <div className="flex flex-wrap gap-2 mb-6">
               {facility.amenities?.map((a, i) => (
-                <span key={i} className="px-3 py-1 text-sm bg-indigo-100 text-indigo-800 rounded-full">
+                <span key={i} className="px-4 py-2 text-sm bg-theme-purple/10 text-theme-purple rounded-full">
                   {a}
                 </span>
               ))}
+            </div>
+
+            {/* Embedded Google Map */}
+            <div className="w-full mt-4 bg-white rounded-xl overflow-hidden shadow-sm">
+              <div className="relative w-full h-0 pb-[56.25%]">
+                <iframe
+                  src={facility?.location?.mapLink}
+                  className="absolute inset-0 w-full h-full border-0"
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Facility Location Map"
+                ></iframe>
+              </div>
             </div>
           </div>
         </div>
@@ -181,7 +204,7 @@ const FacilityDetailPage = () => {
         {/* Sports & Courts */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="bg-white rounded-2xl shadow-lg p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Available Sports</h2>
 
               <div className="flex flex-wrap gap-3 mb-6">
@@ -189,9 +212,9 @@ const FacilityDetailPage = () => {
                   <button
                     key={sport.name}
                     onClick={() => setSelectedSport(sport)}
-                    className={`px-4 py-2 rounded-full font-medium ${
+                    className={`px-5 py-3 rounded-xl font-medium transition-all ${
                       selectedSport?.name === sport.name
-                        ? "bg-theme-purple text-white"
+                        ? "bg-theme-purple text-white shadow-md"
                         : "bg-gray-100 text-gray-800 hover:bg-gray-200"
                     }`}
                   >
@@ -218,7 +241,9 @@ const FacilityDetailPage = () => {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-500 py-6 text-center">No courts available for {selectedSport.name}</p>
+                    <p className="text-gray-500 py-6 text-center">
+                      No courts available for {selectedSport.name}
+                    </p>
                   )}
 
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">
@@ -231,7 +256,7 @@ const FacilityDetailPage = () => {
           </div>
 
           {/* Booking Summary */}
-          <div className="bg-white rounded-xl shadow-sm p-6 sticky top-6">
+          <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-6 h-fit">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Booking Summary</h2>
 
             {selectedSport ? (
@@ -252,7 +277,7 @@ const FacilityDetailPage = () => {
                 </div>
                 <button
                   onClick={() => setIsBookingModalOpen(true)}
-                  className="w-full mt-4 py-3 bg-theme-purple text-white font-medium rounded-lg hover:bg-indigo-700"
+                  className="w-full mt-6 py-4 bg-theme-purple text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors shadow-md"
                 >
                   Book Now
                 </button>
@@ -265,11 +290,11 @@ const FacilityDetailPage = () => {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex items-center">
-                  <Phone size={16} className="text-gray-500 mr-3" />
+                  <Phone size={18} className="text-theme-purple mr-3" />
                   <span>{facility.contactPhone || "Not available"}</span>
                 </div>
                 <div className="flex items-center">
-                  <Mail size={16} className="text-gray-500 mr-3" />
+                  <Mail size={18} className="text-theme-purple mr-3" />
                   <span>{facility.contactEmail || "N/A"}</span>
                 </div>
               </div>
@@ -277,26 +302,33 @@ const FacilityDetailPage = () => {
           </div>
         </div>
 
-        {/* Reviews */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mt-8">
+        {/* Reviews Section */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 mt-8">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Reviews</h2>
             <div className="flex items-center gap-1">
               <Star className="text-yellow-500 fill-current" size={20} />
               <span className="font-medium">{averageRating}</span>
-              <span className="text-gray-500 ml-1">({facility.reviews?.length || 0} reviews)</span>
+              <span className="text-gray-500 ml-1">({reviews?.length || 0} reviews)</span>
             </div>
           </div>
 
-          {facility.reviews?.length > 0 ? (
+          {/* Loading */}
+          {reviewsLoading ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="animate-spin h-6 w-6 text-theme-purple" />
+            </div>
+          ) : reviews && reviews.length > 0 ? (
             <div className="space-y-6">
-              {facility.reviews.slice(0, 3).map((review) => (
+              {reviews.slice(0, 3).map((review) => (
                 <div key={review.id} className="pb-6 border-b border-gray-200 last:border-0">
-                  <div className="flex items-center mb-2">
-                    <div className="w-10 h-10 bg-gray-200 border-2 border-dashed rounded"></div>
+                  <div className="flex items-center mb-3">
+                    <div className="w-10 h-10 bg-theme-purple/20 rounded-full flex items-center justify-center">
+                      <User className="text-theme-purple" size={16} />
+                    </div>
                     <div className="ml-3">
-                      <h4 className="text-sm font-medium">{review.userName || "User"}</h4>
-                      <div className="flex items-center">
+                      <h4 className="text-base font-medium">{review.userName || "User"}</h4>
+                      <div className="flex items-center mt-1">
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
@@ -311,12 +343,13 @@ const FacilityDetailPage = () => {
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-700 text-sm">{review.comment}</p>
+                  <p className="text-gray-700 text-sm leading-relaxed">{review.comment}</p>
                 </div>
               ))}
-              {facility.reviews.length > 3 && (
-                <button className="text-theme-purple text-sm font-medium">
-                  See all {facility.reviews.length} reviews
+
+              {reviews.length > 3 && (
+                <button className="text-theme-purple text-sm font-medium hover:underline">
+                  See all {reviews.length} reviews
                 </button>
               )}
             </div>
@@ -326,6 +359,12 @@ const FacilityDetailPage = () => {
               <p className="mt-2">No reviews yet. Be the first!</p>
             </div>
           )}
+
+          {/* Add Review Form */}
+          <div className="mt-8 pt-6 border-t border-gray-100">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Write a Review</h3>
+            <AddReview facilityId={facilityId} user={user} />
+          </div>
         </div>
       </main>
 
