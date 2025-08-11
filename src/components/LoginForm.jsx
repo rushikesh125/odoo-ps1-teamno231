@@ -92,7 +92,6 @@ const LoginForm = () => {
           photoURL: user.photoURL,
           emailVerified: user.emailVerified,
           role:user.role,
-          ...userDoc.data
         }));
         
         toast.success('Login successful!');
