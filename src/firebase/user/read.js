@@ -1,5 +1,5 @@
 // firebase/user/read.js
-import { doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot ,collection, query, limit, startAfter, orderBy, where} from 'firebase/firestore';
 import { db } from '../config';
 import useSWRSubscription from 'swr/subscription';
 
@@ -70,3 +70,66 @@ export function useUser({ uid }) {
     isLoading: data === undefined,
   };
 }
+
+
+
+// // import { collection, query, limit, startAfter, onSnapshot, where, orderBy } from "firebase/firestore";
+// import { db } from "@/firebase/config"; // Adjust path as needed
+// import useSWRSubscription from 'swr/subscription';
+
+export const useAllUsers = ({ pageLimit, lastSnapDoc, role = 'all', searchTerm = '' }) => {
+  const { data, error } = useSWRSubscription(
+    ["users", pageLimit, lastSnapDoc, role, searchTerm],
+    ([_, pageLimit, lastSnapDoc, role, searchTerm], { next }) => {
+      const ref = collection(db, "users");
+      let q = query(ref);
+
+      if (searchTerm) {
+        q = query(q, orderBy('email'));
+        q = query(q, where('email', '>=', searchTerm));
+        q = query(q, where('email', '<=', searchTerm + '\uf8ff'));
+      } else {
+        q = query(q, orderBy('createdAt', 'desc'));
+      }
+
+      if (role && role !== 'all') {
+        q = query(q, where('role', '==', role));
+      }
+
+      q = query(q, limit(pageLimit ?? 10));
+
+      if (lastSnapDoc) {
+        q = query(q, startAfter(lastSnapDoc));
+      }
+
+      const unsub = onSnapshot(
+        q,
+        (snapshot) => {
+          next(null, {
+            list:
+              snapshot.docs.length === 0
+                ? null
+                : snapshot.docs.map((snap) => ({
+                    id: snap.id,
+                    ...snap.data(),
+                  })),
+            lastSnapDoc:
+              snapshot.docs.length === 0
+                ? null
+                : snapshot.docs[snapshot.docs.length - 1],
+          });
+        },
+        (err) => next(err, null)
+      );
+
+      return () => unsub();
+    }
+  );
+
+  return {
+    data: data?.list || [],
+    lastSnapDoc: data?.lastSnapDoc || null,
+    error: error?.message || null,
+    isLoading: data === undefined,
+  };
+};

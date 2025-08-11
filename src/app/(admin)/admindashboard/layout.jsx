@@ -50,7 +50,7 @@ export default function OwnerDashboardLayout({ children }) {
     { name: 'Facilities', icon: BarChart3, href: '/admindashboard/facilities' },
     { name: 'Reviews', icon: FileText, href: '/admindashboard/reviews' },
     { name: 'Customer Bookings', icon: UserCheckIcon, href: '/admindashboard/bookings' },
-    { name: 'Calendar', icon: Calendar, href: '/admindashboard/calendar' },
+    { name: 'Users', icon: Calendar, href: '/admindashboard/users' },
     { name: 'Settings', icon: Settings, href: '/admindashboard/settings' },
   ];
 
@@ -171,7 +171,7 @@ export default function OwnerDashboardLayout({ children }) {
               >
                 <Menu size={24} />
               </button>
-              <h1 className="text-lg font-semibold text-gray-800">Dashboard</h1>
+              <h1 className="text-lg font-semibold text-gray-800">Admin Dashboard</h1>
             </div>
 
             {/* Right Side Actions */}

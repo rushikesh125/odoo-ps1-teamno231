@@ -7,7 +7,7 @@ import { useAllFacilities } from '@/firebase/facilities/read_admin'; // Ensure t
 import { updateFacilityStatus } from '@/firebase/facilities/update'; // Ensure this path is correct
 import { toast } from 'react-hot-toast';
 // Import icons from lucide-react
-import { Edit, CheckCircle, XCircle, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Edit, CheckCircle, XCircle, Loader2, ChevronLeft, ChevronRight, EyeIcon } from 'lucide-react';
 
 const DEFAULT_ITEMS_PER_PAGE = 10;
 const ITEMS_PER_PAGE_OPTIONS = [5, 10, 15, 20, 30];
@@ -186,7 +186,7 @@ const AdminFacilitiesPage = () => {
                             className="text-indigo-600 hover:text-indigo-900 p-1.5 rounded-md hover:bg-indigo-50 transition-colors"
                             title="Edit Facility"
                           >
-                            <Edit className="h-4 w-4" />
+                            <EyeIcon className="h-4 w-4" />
                             <span className="sr-only">Edit</span>
                           </Link>
 

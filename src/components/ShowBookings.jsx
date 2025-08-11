@@ -8,7 +8,7 @@ import { Card, CardHeader, CardBody } from "@heroui/card";
 import { useFacility } from "@/firebase/facilities/read_hooks";
 import { useUser } from "@/firebase/user/read"; // Assuming this hook exists
 import { useAllBookings } from "@/firebase/booking/read";
-import { CheckCircle, Clock, Calendar, User, ChevronLeft, ChevronRight, Loader2, Clock4, DollarSign } from "lucide-react";
+import { CheckCircle, Clock, Calendar, User, ChevronLeft, ChevronRight, Loader2, Clock4, DollarSign, IndianRupee } from "lucide-react";
 import { updateBookingStatus } from "@/firebase/booking/update";
 
 const DEFAULT_ITEMS_PER_PAGE = 10;
@@ -104,7 +104,6 @@ const ShowBookings = () => {
   const [itemsPerPage, setItemsPerPage] = useState(DEFAULT_ITEMS_PER_PAGE);
   const [lastSnapDocStack, setLastSnapDocStack] = useState([]);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
-  const [isUpdatingStatus, setIsUpdatingStatus] = useState({});
 
   const currentLastSnapDoc = currentPageIndex === 0 ? null : lastSnapDocStack[currentPageIndex - 1];
 
@@ -204,20 +203,22 @@ const ShowBookings = () => {
                   <div className="space-y-2">
                     <UserDetails uid={item?.userId} />
 
+                    <div className="text-gray-700 text-sm">
+                      Court: {item?.courtName || "N/A"} - {item?.sportName || "N/A"}
+                    </div>
+
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-gray-500" />
                       <p className="text-gray-700 text-sm">
-                        {item?.bookingDate
-                          ? new Date(item.bookingDate).toLocaleDateString()
-                          : "No date provided"}
+                        {item?.date || "No date provided"}
                       </p>
                     </div>
 
-                    {item?.bookingTime && (
+                    {item?.startTime && (
                       <div className="flex items-center gap-2">
                         <Clock4 className="w-4 h-4 text-gray-500" />
                         <p className="text-gray-700 text-sm">
-                          {item.bookingTime}
+                          {item.startTime}
                         </p>
                       </div>
                     )}
@@ -226,23 +227,19 @@ const ShowBookings = () => {
                       <div className="flex items-center gap-2">
                         <Clock className="w-4 h-4 text-gray-500" />
                         <p className="text-gray-700 text-sm">
-                          Duration: {item.duration} {item.durationUnit || "hours"}
+                          Duration: {item.duration} hours
                         </p>
                       </div>
                     )}
 
-                    {item?.price && (
+                    {item?.totalPrice && (
                       <div className="flex items-center gap-2">
-                        <DollarSign className="w-4 h-4 text-gray-500" />
+                        <IndianRupee className="w-4 h-4 text-gray-500" />
                         <p className="text-gray-700 text-sm">
-                          Price: ${item.price.toFixed(2)}
+                          Price: &#8377; {item.totalPrice.toFixed(2)}
                         </p>
                       </div>
                     )}
-
-                    <p className="text-gray-600 text-sm">
-                      {item?.details || "No additional details"}
-                    </p>
                   </div>
                 </div>
               </div>
@@ -301,4 +298,3 @@ const ShowBookings = () => {
 };
 
 export default ShowBookings;
-

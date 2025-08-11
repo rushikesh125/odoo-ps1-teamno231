@@ -73,7 +73,7 @@ export const useAllBookings = ({ pageLimit, lastSnapDoc }) => {
       return () => unsub();
     }
   );
-
+  console.log("All Bookings:",data?.list )
   return {
     data: data?.list || [],
     lastSnapDoc: data?.lastSnapDoc || null,

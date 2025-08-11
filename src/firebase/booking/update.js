@@ -16,7 +16,7 @@ export const updateBookingStatus = async (facilityId, bookingId, newStatus) => {
     const bookingRef = doc(db, "facilities", facilityId, "bookings", bookingId);
     await updateDoc(bookingRef, {
       status: newStatus,
-      updatedAt: Timestamp.new(),
+      updatedAt: Timestamp.now(),
     });
   } catch (error) {
     console.error("Error updating booking status:", error);
