@@ -4,12 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Menu, X, Sun, Moon, LogIn, BrainCircuit } from "lucide-react";
-import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
+import {  onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase/config";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser, addUser } from "@/store/userSlice";
 import UserDropdown from "./UserDropdown";
-import CustomBtn from "./CustomBtn";
 import toast from "react-hot-toast";
 
 const NavBar = () => {
@@ -44,11 +43,13 @@ const NavBar = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+        console.log(user)
         let tempuser = {
           uid: user?.uid,
           displayName: user?.displayName,
-          email: user?.email,
-          photoURL: user?.photoURL,
+          email: user.email,
+          photoURL: user.photoURL,
+          role:user.role
         };
         dispatch(addUser(tempuser));
       } else {
@@ -67,18 +68,7 @@ const NavBar = () => {
   ];
 
   const isActive = (path) => pathname === path;
-  const handleLogin = async ()=>{
-    setIsLoading(true);
-    try {
-        await signInWithPopup(auth,new GoogleAuthProvider());
-        toast.success("Login Successful")
-    } catch (error) {
-        console.log(error)
-        toast.error(error?.message || "Some Error Occured")
-    }finally{
-      setIsLoading(false);
-    }
-  }
+  
   return (
     <nav
       className="fixed w-full z-50 transition-all duration-300 backdrop-blur-lg border-b border-slate-700/[0.10]"
@@ -100,7 +90,7 @@ const NavBar = () => {
                 > */}
                 
                 <h1 className="text-xl md:text-2xl font-bold ">
-                  Your Logo
+                  QUICKCOURT
                 </h1>
               </div>
             </Link>
@@ -141,13 +131,13 @@ const NavBar = () => {
 
             {/* Login Link */}
             {!user ? (
-              <CustomBtn
-                onClick={handleLogin}
-                className="flex items-center space-x-2 px-4 py-2 rounded-full text-base font-medium text-white bg-theme-purple hover:shadow-lg transition-all duration-300 mt-2"
+              <Link
+                href="/login"
+                className="cursor-pointer flex items-center space-x-2 px-4 py-2 rounded-full text-base font-medium text-white bg-theme-purple hover:shadow-lg transition-all duration-300 mt-2"
               >
                 <LogIn className="w-4 h-4" />
                 <span>Login</span>
-              </CustomBtn>
+              </Link>
             ) : (
               <UserDropdown user={user}/>
             )}
