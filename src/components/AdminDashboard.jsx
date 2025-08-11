@@ -16,14 +16,15 @@ import {
   Calendar,
   User,
   Layers,
+  Shield,
+  ShieldUser,
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import UserDropdown from './UserDropdown';
-import Link from 'next/link';
 
-export default function OwnerDashboardLayout({ children }) {
+export default function AdminDashboard({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
@@ -40,13 +41,13 @@ export default function OwnerDashboardLayout({ children }) {
   };
 
   const menuItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
-    { name: 'Users', icon: Users, href: '/dashboard/users' },
-    { name: 'Facilities', icon: BarChart3, href: '/dashboard/facilities' },
-    { name: 'Documents', icon: FileText, href: '/dashboard/documents' },
-    { name: 'Messages', icon: MessageSquare, href: '/dashboard/messages' },
-    { name: 'Calendar', icon: Calendar, href: '/dashboard/calendar' },
-    { name: 'Settings', icon: Settings, href: '/dashboard/settings' },
+    { name: 'Dashboard', icon: ShieldUser, href: '/admindashboard' },
+    { name: 'Users', icon: Users, href: '/admindashboard/users' },
+    { name: 'Facilities', icon: BarChart3, href: '/admindashboard/facilities' },
+    { name: 'Documents', icon: FileText, href: '/admindashboard/documents' },
+    { name: 'Messages', icon: MessageSquare, href: '/admindashboard/messages' },
+    { name: 'Calendar', icon: Calendar, href: '/admindashboard/calendar' },
+    { name: 'Settings', icon: Settings, href: '/admindashboard/settings' },
   ];
 
   useEffect(() => {
@@ -125,13 +126,13 @@ export default function OwnerDashboardLayout({ children }) {
               <p className="text-xs text-gray-500 truncate">{user?.email || 'user@quickcourt.com'}</p>
             </div>
           </div>
-          <button
+          {/* <button
             onClick={handleLogout}
             className="flex items-center w-full p-3 rounded-xl text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all duration-200 text-sm"
           >
             <LogOut size={18} className="mr-3" />
             <span>Logout</span>
-          </button>
+          </button> */}
         </div>
       </aside>
 
@@ -148,7 +149,7 @@ export default function OwnerDashboardLayout({ children }) {
               >
                 <Menu size={24} />
               </button>
-              <h1 className="text-lg font-semibold text-gray-800">Dashboard</h1>
+              <h1 className="text-lg font-semibold text-gray-800">Admin Dashboard</h1>
             </div>
 
             {/* Right Side Actions */}

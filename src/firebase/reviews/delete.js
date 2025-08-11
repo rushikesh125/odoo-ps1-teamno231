@@ -1,5 +1,5 @@
 // /firebase/reviews/delete.js
-import { doc, deleteDoc, updateDoc, increment } from "firebase/firestore";
+import { doc, deleteDoc, updateDoc, increment, getDoc } from "firebase/firestore";
 import { db } from "../config";
 
 export const deleteReview = async (facilityId, reviewId) => {

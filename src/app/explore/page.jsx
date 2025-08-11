@@ -49,6 +49,14 @@ const ExplorePage = () => {
         }
     }, [searchParams]); // Run when searchParams change
 
+    // Handle query parameter for search query (q)
+    useEffect(() => {
+        const queryFromUrl = searchParams.get("q");
+        if (queryFromUrl && queryFromUrl !== searchQuery) {
+            setSearchQuery(queryFromUrl);
+        }
+    }, [searchParams]); // Run when searchParams change
+
     // Fetch facilities
     const { data: facilities, isLoading, error } = useFacilities({
         pageLimit: 12,

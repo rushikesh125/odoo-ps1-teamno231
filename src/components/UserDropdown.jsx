@@ -8,6 +8,7 @@ import {
   Settings,
   Shield,
   User,
+  LayoutDashboard,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import CustomBtn from "./CustomBtn";
@@ -16,14 +17,52 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/config";
+import { getUserRole } from "@/firebase/user/read";
+import { isAdminExits } from "@/firebase/admins/read";
 
 const UserDropdown = ({ user }) => {
   const { displayName, email, uid, photoURL } = user;
   const [imgSrc, setImgSrc] = useState(photoURL ?? "./../images/user-img.jpg");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isFacilityOwner, setIsFacilityOwner] = useState(false);
+  const [loading, setLoading] = useState(true);
   const dropdownRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  // Check user roles
+  useEffect(() => {
+    const checkUserRoles = async () => {
+      if (!email || !uid) {
+        setIsAdmin(false);
+        setIsFacilityOwner(false);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        
+        // Check admin status
+        const adminExists = await isAdminExits(email);
+        setIsAdmin(adminExists);
+        
+        // Check user role
+        const roleResult = await getUserRole(uid);
+        if (roleResult.success) {
+          setIsFacilityOwner(roleResult.role === 'facility_owner');
+        }
+      } catch (error) {
+        console.error('Error checking user roles:', error);
+        toast.error('Failed to load user permissions');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkUserRoles();
+  }, [email, uid]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -91,10 +130,29 @@ const UserDropdown = ({ user }) => {
                 <BookOpenText className="w-4 h-4" />
                 Bookings
               </Link>
-              <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                <Shield className="w-4 h-4" />
-                Privacy
-              </button>
+              
+              {/* Facility Owner Dashboard Link */}
+              {isFacilityOwner && (
+                <Link
+                  href={`/dashboard`}
+                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  Owner Dashboard
+                </Link>
+              )}
+              
+              {/* Admin Dashboard Link */}
+              {isAdmin && (
+                <Link
+                  href={`/admindashboard`}
+                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                >
+                  <Shield className="w-4 h-4" />
+                  Admin Dashboard
+                </Link>
+              )}
+              
               <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
                 <HelpCircle className="w-4 h-4" />
                 Help Center

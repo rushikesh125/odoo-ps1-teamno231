@@ -16,11 +16,15 @@ import {
   Calendar,
   User,
   Layers,
+  Shield,
+  ShieldUser,
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
-import UserDropdown from './UserDropdown';
+import UserDropdown from '@/components/UserDropdown';
+import { onAuthStateChanged } from 'firebase/auth';
+import { addUser, clearUser } from '@/store/userSlice';
 import Link from 'next/link';
 
 export default function OwnerDashboardLayout({ children }) {
@@ -40,13 +44,13 @@ export default function OwnerDashboardLayout({ children }) {
   };
 
   const menuItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
-    { name: 'Users', icon: Users, href: '/dashboard/users' },
-    { name: 'Facilities', icon: BarChart3, href: '/dashboard/facilities' },
-    { name: 'Documents', icon: FileText, href: '/dashboard/documents' },
-    { name: 'Messages', icon: MessageSquare, href: '/dashboard/messages' },
-    { name: 'Calendar', icon: Calendar, href: '/dashboard/calendar' },
-    { name: 'Settings', icon: Settings, href: '/dashboard/settings' },
+    { name: 'Admin Dashboard', icon: ShieldUser, href: '/admindashboard' },
+    { name: 'Admins ', icon: Users, href: '/admindashboard/admins' },
+    { name: 'Facilities', icon: BarChart3, href: '/admindashboard/facilities' },
+    { name: 'Reviews', icon: FileText, href: '/admindashboard/reviews' },
+    { name: 'Messages', icon: MessageSquare, href: '/admindashboard/messages' },
+    { name: 'Calendar', icon: Calendar, href: '/admindashboard/calendar' },
+    { name: 'Settings', icon: Settings, href: '/admindashboard/settings' },
   ];
 
   useEffect(() => {
@@ -59,6 +63,24 @@ export default function OwnerDashboardLayout({ children }) {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  //  useEffect(() => {
+  //         const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //             if (user) {
+  //                 let tempuser = {
+  //                     uid: user?.uid,
+  //                     displayName: user?.displayName,
+  //                     email: user.email,
+  //                     photoURL: user.photoURL,
+  //                     role: user.role
+  //                 };
+  //                 dispatch(addUser(tempuser));
+  //             } else {
+  //                 dispatch(clearUser());
+  //             }
+  //         });
+  //         return () => unsubscribe();
+  //     }, []);
 
   return (
     <div className="flex h-screen bg-gray-50 text-gray-800">
@@ -78,7 +100,7 @@ export default function OwnerDashboardLayout({ children }) {
       >
         {/* Logo Section */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-          <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2">
             <div className="p-2 bg-indigo-50 rounded-xl">
               <Layers className="text-theme-purple" size={24} />
             </div>

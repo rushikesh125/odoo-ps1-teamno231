@@ -14,7 +14,7 @@ export default function SignupPage() {
   useEffect(() => {
     // Redirect to dashboard if user is already logged in
     if ( user) {
-      router.push('/dashboard');
+      router.push('/');
     }
   }, [user, router]);
 

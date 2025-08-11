@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Menu, X, LogIn, Search } from "lucide-react";
+import { Menu, X, LogIn, Search, Layers } from "lucide-react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase/config";
 import { useDispatch, useSelector } from "react-redux";
@@ -71,7 +71,6 @@ const NavBar = () => {
   const navigationLinks = [
     { name: "Home", href: "/" },
     { name: "Explore", href: "/explore" },
-    { name: "Facilities", href: "/facilities" },
     { name: "Bookings", href: "/mybookings" },
   ];
 
@@ -86,15 +85,11 @@ const NavBar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex-shrink-0">
-            <Link
-              href="/"
-              className="text-xl flex items-center font-bold text-theme-purple"
-            >
-              <h1 className="text-xl md:text-2xl font-bold">
-                QUICKCOURT
-              </h1>
-            </Link>
+          <div className="flex items-center space-x-2">
+            <div className="p-2 bg-indigo-50 rounded-xl">
+              <Layers className="text-theme-purple" size={24} />
+            </div>
+            <Link href={`/`} className="text-xl font-semibold text-theme-purple tracking-tight">QUICKCOURT</Link>
           </div>
 
           {/* Desktop Navigation - Centered */}
