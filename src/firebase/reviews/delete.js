@@ -1,13 +1,22 @@
 // /firebase/reviews/delete.js
-import { doc, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc, updateDoc, increment } from "firebase/firestore";
 import { db } from "../config";
 
-/**
- * Deletes a review
- * @param {string} facilityId
- * @param {string} reviewId
- */
 export const deleteReview = async (facilityId, reviewId) => {
   const reviewRef = doc(db, "facilities", facilityId, "reviews", reviewId);
-  await deleteDoc(reviewRef);
+  const reviewSnap = await getDoc(reviewRef);
+
+  if (reviewSnap.exists()) {
+    const { rating } = reviewSnap.data();
+
+    // Delete review
+    await deleteDoc(reviewRef);
+
+    // Update facility counts
+    const facilityRef = doc(db, "facilities", facilityId);
+    await updateDoc(facilityRef, {
+      reviewsCount: increment(-1),
+      ratingSum: increment(-rating),
+    });
+  }
 };

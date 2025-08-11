@@ -2,9 +2,9 @@ import { MapPin, Star } from "lucide-react";
 import Link from "next/link";
 
 const FacilityCard = ({ facility }) => {
-  // Calculate average rating (mock data since we don't have real reviews yet)
-  const averageRating = (Math.random() * 2 + 3).toFixed(1); // Random between 3-5
-  const reviewCount = Math.floor(Math.random() * 50) + 10; // Random between 10-60
+const averageRating = facility?.ratingSum && facility?.reviewsCount
+    ? (facility?.ratingSum / facility?.reviewsCount).toFixed(1)
+    : "0.0";
 
   return (
     <Link 
@@ -47,7 +47,7 @@ const FacilityCard = ({ facility }) => {
             <span className="text-gray-600 text-sm">/hour</span>
           </div>
           <div className="flex items-center text-sm text-gray-600">
-            <span>{reviewCount} reviews</span>
+            <span>{facility?.reviewsCount || 0} reviews</span>
           </div>
         </div>
       </div>

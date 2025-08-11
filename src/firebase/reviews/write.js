@@ -1,12 +1,7 @@
 // /firebase/reviews/write.js
-import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../config";
-/**
- * Creates a new review for a facility
- * @param {string} facilityId
- * @param {object} reviewData - { userId, userName, rating, comment }
- * @returns {Promise<string>} - reviewId
- */
+import { doc, setDoc, updateDoc, increment, collection, serverTimestamp } from "firebase/firestore";
+
 export const createReview = async (facilityId, reviewData) => {
   const reviewsRef = collection(db, "facilities", facilityId, "reviews");
   const newDocRef = doc(reviewsRef);
@@ -20,6 +15,15 @@ export const createReview = async (facilityId, reviewData) => {
     updatedAt: serverTimestamp(),
   };
 
+  // Save review
   await setDoc(newDocRef, review);
+
+  // Update facility aggregate
+  const facilityRef = doc(db, "facilities", facilityId);
+  await updateDoc(facilityRef, {
+    reviewsCount: increment(1),
+    ratingSum: increment(review.rating),
+  });
+
   return newDocRef.id;
 };

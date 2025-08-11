@@ -26,3 +26,11 @@ export const getReviews = async (facilityId) => {
     ...doc.data()
   }));
 };
+
+export const getReviewsCount = async (facilityId) => {
+  if (!facilityId) return 0;
+
+  const reviewsRef = collection(db, "facilities", facilityId, "reviews");
+  const snapshot = await getDocs(reviewsRef);
+  return snapshot.size; // number of documents
+};

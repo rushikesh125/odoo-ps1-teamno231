@@ -85,7 +85,7 @@ const FacilityDetailPage = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         <NavBar />
-        <div className="max-w-lg mx-auto px-4 py-24">
+        <div className="max-w-lg mx-auto px-4 py-25">
           <div className="bg-white rounded-xl shadow p-8 text-center">
             <div className="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center">
               <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,7 +115,7 @@ const FacilityDetailPage = () => {
     <div className="min-h-screen bg-gray-50">
       <NavBar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-25">
         {/* Breadcrumb */}
         <nav className="flex text-sm mb-6">
           <a href="/" className="text-gray-600 hover:text-theme-purple transition-colors">Home</a>
