@@ -18,6 +18,7 @@ import {
   Layers,
   Shield,
   ShieldUser,
+  UserCheckIcon,
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
@@ -48,7 +49,7 @@ export default function OwnerDashboardLayout({ children }) {
     { name: 'Admins ', icon: Users, href: '/admindashboard/admins' },
     { name: 'Facilities', icon: BarChart3, href: '/admindashboard/facilities' },
     { name: 'Reviews', icon: FileText, href: '/admindashboard/reviews' },
-    { name: 'Messages', icon: MessageSquare, href: '/admindashboard/messages' },
+    { name: 'Customer Bookings', icon: UserCheckIcon, href: '/admindashboard/bookings' },
     { name: 'Calendar', icon: Calendar, href: '/admindashboard/calendar' },
     { name: 'Settings', icon: Settings, href: '/admindashboard/settings' },
   ];

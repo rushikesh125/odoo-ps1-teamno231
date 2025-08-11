@@ -1,5 +1,5 @@
 // firebase/user/read.js
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../config';
 import useSWRSubscription from 'swr/subscription';
 

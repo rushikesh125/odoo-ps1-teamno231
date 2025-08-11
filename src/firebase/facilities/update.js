@@ -31,3 +31,32 @@ export const updateFacility = async (facilityId, updateData) => {
     throw error;
   }
 };
+
+// firebase/facilities/update.js
+
+/**
+ * Updates the status of a facility document.
+ * @param {string} facilityId - The ID of the facility document.
+ * @param {string} newStatus - The new status ('approved', 'rejected', 'pending').
+ * @returns {Promise<void>} - A promise that resolves when the update is complete.
+ */
+export const updateFacilityStatus = async (facilityId, newStatus) => {
+  if (!['approved', 'rejected', 'pending'].includes(newStatus)) {
+    throw new Error('Invalid status provided.');
+  }
+
+  const facilityRef = doc(db, 'facilities', facilityId);
+
+  try {
+    await updateDoc(facilityRef, {
+      status: newStatus,
+      updatedAt: Timestamp.now(), // Update the timestamp
+    });
+    console.log(`Facility ${facilityId} status updated to ${newStatus}`);
+  } catch (error) {
+    console.error('Error updating facility status:', error);
+    throw error; // Re-throw to be caught by the component
+  }
+};
+
+// ... other update functions like updateFacility
