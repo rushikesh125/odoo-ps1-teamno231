@@ -63,7 +63,7 @@ export function useUser({ uid }) {
       return () => unsub();
     }
   );
-
+  console.log("use user",data)
   return {
     data: data,
     error: error?.message,

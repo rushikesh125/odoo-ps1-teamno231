@@ -16,6 +16,7 @@ import {
   Calendar,
   User,
   Layers,
+  BookAlertIcon,
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
@@ -41,12 +42,12 @@ export default function OwnerDashboardLayout({ children }) {
 
   const menuItems = [
     { name: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
-    { name: 'Users', icon: Users, href: '/dashboard/users' },
+    // { name: 'Users', icon: Users, href: '/dashboard/users' },
     { name: 'Facilities', icon: BarChart3, href: '/dashboard/facilities' },
-    { name: 'Documents', icon: FileText, href: '/dashboard/documents' },
-    { name: 'Messages', icon: MessageSquare, href: '/dashboard/messages' },
-    { name: 'Calendar', icon: Calendar, href: '/dashboard/calendar' },
-    { name: 'Settings', icon: Settings, href: '/dashboard/settings' },
+    { name: 'Bookings', icon: BookAlertIcon, href: '/dashboard/bookings' },
+    // { name: 'Messages', icon: MessageSquare, href: '/dashboard/messages' },
+    // { name: 'Calendar', icon: Calendar, href: '/dashboard/calendar' },
+    // { name: 'Settings', icon: Settings, href: '/dashboard/settings' },
   ];
 
   useEffect(() => {

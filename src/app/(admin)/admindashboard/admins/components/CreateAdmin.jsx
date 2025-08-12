@@ -56,7 +56,7 @@ const CreateAdmin = () => {
   }, [id]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     setIsLoading(true);
 
     try {

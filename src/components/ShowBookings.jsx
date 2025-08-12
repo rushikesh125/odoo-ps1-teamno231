@@ -6,9 +6,20 @@ import Link from "next/link";
 import { Button } from "@heroui/button";
 import { Card, CardHeader, CardBody } from "@heroui/card";
 import { useFacility } from "@/firebase/facilities/read_hooks";
-import { useUser } from "@/firebase/user/read"; // Assuming this hook exists
+import { useUser } from "@/firebase/user/read";
 import { useAllBookings } from "@/firebase/booking/read";
-import { CheckCircle, Clock, Calendar, User, ChevronLeft, ChevronRight, Loader2, Clock4, DollarSign, IndianRupee } from "lucide-react";
+import { 
+  CheckCircle, 
+  Clock, 
+  Calendar, 
+  User, 
+  ChevronLeft, 
+  ChevronRight, 
+  Loader2, 
+  Clock4, 
+  IndianRupee,
+  CircleDot
+} from "lucide-react";
 import { updateBookingStatus } from "@/firebase/booking/update";
 
 const DEFAULT_ITEMS_PER_PAGE = 10;
@@ -29,30 +40,55 @@ const BookingStatus = ({ status, bookingId, facilityId }) => {
     }
   };
 
+  const statusConfig = {
+    confirmed: {
+      icon: CheckCircle,
+      bgColor: "bg-purple-100",
+      textColor: "text-purple-800",
+      label: "Confirmed"
+    },
+    rejected: {
+      icon: Clock,
+      bgColor: "bg-red-100",
+      textColor: "text-red-800",
+      label: "Rejected"
+    },
+    pending: {
+      icon: CircleDot,
+      bgColor: "bg-yellow-100",
+      textColor: "text-yellow-800",
+      label: "Pending"
+    }
+  };
+
+  const config = statusConfig[status] || statusConfig.pending;
+  const IconComponent = config.icon;
+
   return (
     <div className="flex items-center gap-2">
-      <span
-        className={`px-2 py-1 rounded-full text-xs font-medium ${
-          status === "confirmed"
-            ? "bg-green-100 text-green-800"
-            : "bg-yellow-100 text-yellow-800"
-        }`}
-      >
-        {status === "confirmed" ? (
-          <CheckCircle className="w-4 h-4 inline mr-1" />
-        ) : (
-          <Clock className="w-4 h-4 inline mr-1" />
-        )}
-        {status.charAt(0).toUpperCase() + status.slice(1)}
+      <span className={`px-3 py-1 rounded-full text-xs font-medium flex items-center ${config.bgColor} ${config.textColor}`}>
+        <IconComponent className="w-3 h-3 mr-1" />
+        {config.label}
       </span>
       {status === "pending" && (
-        <Button
-          className="bg-green-500 hover:bg-green-600 text-white text-xs py-1 px-2"
-          onPress={() => handleStatusChange("confirmed")}
-          isLoading={isUpdating}
-        >
-          Confirm
-        </Button>
+        <div className="flex gap-1">
+          <Button
+            className="bg-purple-600 hover:bg-purple-700 text-white text-xs py-1 px-2 min-w-[70px]"
+            onPress={() => handleStatusChange("confirmed")}
+            isLoading={isUpdating}
+            size="sm"
+          >
+            Confirm
+          </Button>
+          <Button
+            className="bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs py-1 px-2 min-w-[70px]"
+            onPress={() => handleStatusChange("rejected")}
+            isLoading={isUpdating}
+            size="sm"
+          >
+            Reject
+          </Button>
+        </div>
       )}
     </div>
   );
@@ -63,8 +99,8 @@ const BookedFacility = ({ facilityId }) => {
 
   if (isLoading) {
     return (
-      <div className="inline-block bg-gray-100 px-2 py-1 rounded-md text-xs">
-        <div className="w-20 h-3 bg-gray-200 animate-pulse rounded"></div>
+      <div className="inline-block bg-purple-100 px-2 py-1 rounded-md text-xs">
+        <div className="w-20 h-3 bg-purple-200 animate-pulse rounded"></div>
       </div>
     );
   }
@@ -84,18 +120,18 @@ const UserDetails = ({ uid }) => {
   if (isLoading) {
     return (
       <div className="flex items-center gap-2">
-        <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
-        <div className="w-20 h-3 bg-gray-200 animate-pulse rounded"></div>
+        <div className="w-8 h-8 bg-purple-200 rounded-full animate-pulse"></div>
+        <div className="w-24 h-3 bg-purple-200 animate-pulse rounded"></div>
       </div>
     );
   }
 
   return (
     <div className="flex items-center gap-2">
-      <Avatar url={user?.photoURL || "/user-profile.jpg"} />
-      <h4 className="font-semibold text-gray-900">
+      <Avatar url={user?.photoURL || "/user-profile.jpg"} className="w-8 h-8" />
+      <div className="font-medium text-gray-900 text-sm">
         {user?.displayName || user?.email || "Anonymous User"}
-      </h4>
+      </div>
     </div>
   );
 };
@@ -170,74 +206,76 @@ const ShowBookings = () => {
 
   return (
     <Card className="w-full shadow-lg rounded-xl overflow-hidden">
-      <CardHeader className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+      <CardHeader className="bg-purple-600 text-white">
         <h2 className="text-xl font-bold">Customer Bookings</h2>
       </CardHeader>
 
-      <CardBody className="p-6">
+      <CardBody className="p-0">
         {bookings && bookings.length > 0 ? (
-          <div className="space-y-6">
+          <div className="divide-y divide-gray-100">
             {bookings.map((item, index) => (
               <div
                 key={generateBookingKey(item)}
-                className="relative flex gap-4 p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow bg-white"
+                className="p-4 hover:bg-purple-50 transition-colors"
               >
-                <div className="flex-shrink-0">
-                  <div className="bg-gray-100 text-gray-700 text-xs font-medium px-2 py-1 rounded-full">
-                    {index + 1 + currentPageIndex * itemsPerPage}
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-purple-100 text-purple-800 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">
+                      {index + 1 + currentPageIndex * itemsPerPage}
+                    </div>
+                    <BookedFacility facilityId={item?.facilityId} />
                   </div>
+                  <BookingStatus
+                    status={item?.status || "pending"}
+                    bookingId={item?.bookingId}
+                    facilityId={item?.facilityId}
+                  />
                 </div>
 
-                <div className="flex-1 min-w-0">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <BookedFacility facilityId={item?.facilityId} />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <UserDetails uid={item?.userId} />
+                    
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <User className="w-4 h-4 text-purple-500" />
+                      <span className="text-sm">
+                        Court: {item?.courtName || "N/A"} - {item?.sportName || "N/A"}
+                      </span>
                     </div>
-                    <BookingStatus
-                      status={item?.status || "pending"}
-                      bookingId={item?.bookingId}
-                      facilityId={item?.facilityId}
-                    />
                   </div>
 
-                  <div className="space-y-2">
-                    <UserDetails uid={item?.userId} />
-
-                    <div className="text-gray-700 text-sm">
-                      Court: {item?.courtName || "N/A"} - {item?.sportName || "N/A"}
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-gray-500" />
-                      <p className="text-gray-700 text-sm">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <Calendar className="w-4 h-4 text-purple-500" />
+                      <span className="text-sm">
                         {item?.date || "No date provided"}
-                      </p>
+                      </span>
                     </div>
 
                     {item?.startTime && (
-                      <div className="flex items-center gap-2">
-                        <Clock4 className="w-4 h-4 text-gray-500" />
-                        <p className="text-gray-700 text-sm">
+                      <div className="flex items-center gap-2 text-gray-700">
+                        <Clock4 className="w-4 h-4 text-purple-500" />
+                        <span className="text-sm">
                           {item.startTime}
-                        </p>
+                        </span>
                       </div>
                     )}
 
                     {item?.duration && (
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-gray-500" />
-                        <p className="text-gray-700 text-sm">
+                      <div className="flex items-center gap-2 text-gray-700">
+                        <Clock className="w-4 h-4 text-purple-500" />
+                        <span className="text-sm">
                           Duration: {item.duration} hours
-                        </p>
+                        </span>
                       </div>
                     )}
 
                     {item?.totalPrice && (
-                      <div className="flex items-center gap-2">
-                        <IndianRupee className="w-4 h-4 text-gray-500" />
-                        <p className="text-gray-700 text-sm">
-                          Price: &#8377; {item.totalPrice.toFixed(2)}
-                        </p>
+                      <div className="flex items-center gap-2 text-gray-700">
+                        <IndianRupee className="w-4 h-4 text-purple-500" />
+                        <span className="text-sm font-medium">
+                          &#8377; {item.totalPrice.toFixed(2)}
+                        </span>
                       </div>
                     )}
                   </div>
@@ -246,18 +284,18 @@ const ShowBookings = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-10">
+          <div className="text-center py-12">
             <div className="text-gray-400 mb-2">No bookings found</div>
             <p className="text-gray-500">There are no bookings to display</p>
           </div>
         )}
 
         {bookings && bookings.length > 0 && (
-          <div className="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div className="mt-0 border-t border-gray-100 p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
               <span className="text-gray-600 text-sm">Items per page:</span>
               <select
-                className="bg-gray-100 rounded-lg outline-none p-2 text-sm border border-gray-200 focus:ring-2 focus:ring-purple-500"
+                className="bg-purple-50 rounded-lg outline-none p-2 text-sm border border-purple-200 focus:ring-2 focus:ring-purple-500"
                 value={itemsPerPage}
                 onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
                 disabled={isInitialLoading}
@@ -272,7 +310,7 @@ const ShowBookings = () => {
 
             <div className="flex gap-2">
               <button
-                className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex items-center px-4 py-2 bg-purple-100 text-purple-700 rounded-md hover:bg-purple-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 onClick={handlePreviousPage}
                 disabled={!hasPreviousPage || isInitialLoading}
                 aria-label="Previous page"
@@ -281,7 +319,7 @@ const ShowBookings = () => {
                 Previous
               </button>
               <button
-                className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex items-center px-4 py-2 bg-purple-100 text-purple-700 rounded-md hover:bg-purple-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 onClick={handleNextPage}
                 disabled={!hasNextPage || isInitialLoading}
                 aria-label="Next page"

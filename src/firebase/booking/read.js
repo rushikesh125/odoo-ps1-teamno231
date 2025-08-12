@@ -2,6 +2,7 @@
 import { doc, getDoc, collection, getDocs, query, where, orderBy, collectionGroup, limit, startAfter, onSnapshot } from "firebase/firestore";
 import { db } from "../config";
 import useSWRSubscription from "swr/subscription";
+import { getFacilitiesByOwnerId } from "../facilities/read";
 
 // Get a single booking
 export const getBooking = async (facilityId, bookingId) => {
@@ -81,3 +82,144 @@ export const useAllBookings = ({ pageLimit, lastSnapDoc }) => {
     isLoading: data === undefined,
   };
 };
+
+export const getBookingsForOwner = async (ownerId) => {
+  try {
+    // First get all facilities owned by this user
+    const facilities = await getFacilitiesByOwnerId(ownerId);
+    const facilityIds = facilities.map(facility => facility.id);
+    
+    if (facilityIds.length === 0) {
+      return [];
+    }
+
+    // Get all bookings for these facilities
+    const bookings = [];
+    
+    for (const facilityId of facilityIds) {
+      const bookingsRef = collection(db, 'facilities', facilityId, 'bookings');
+      const bookingsQuery = query(bookingsRef, orderBy('createdAt', 'desc'));
+      const bookingsSnapshot = await getDocs(bookingsQuery);
+      
+      bookingsSnapshot.forEach((doc) => {
+        bookings.push({
+          id: doc.id,
+          facilityId,
+          ...doc.data()
+        });
+      });
+    }
+    console.log("owner bookings",bookings)
+    return bookings;
+  } catch (error) {
+    console.error('Error fetching bookings:', error);
+    throw error;
+  }
+};
+
+// Get booking details with facility and user info
+export const getBookingDetails = async (facilityId, bookingId) => {
+  try {
+    // Get booking data
+    const bookingRef = doc(db, 'facilities', facilityId, 'bookings', bookingId);
+    const bookingDoc = await getDoc(bookingRef);
+    
+    if (!bookingDoc.exists()) {
+      throw new Error('Booking not found');
+    }
+    
+    const bookingData = bookingDoc.data();
+    
+    // Get facility data
+    const facilityRef = doc(db, 'facilities', facilityId);
+    const facilityDoc = await getDoc(facilityRef);
+    const facilityData = facilityDoc.exists() ? facilityDoc.data() : null;
+    
+    // Get user data (assuming user ID is stored in booking)
+    const userRef = doc(db, 'users', bookingData.userId);
+    const userDoc = await getDoc(userRef);
+    const userData = userDoc.exists() ? userDoc.data() : null;
+    
+    return {
+      id: bookingDoc.id,
+      ...bookingData,
+      facility: facilityData,
+      user: userData
+    };
+  } catch (error) {
+    console.error('Error fetching booking details:', error);
+    throw error;
+  }
+};
+
+export function useOwnedFacilities({ ownerId }) {
+  const { data, error } = useSWRSubscription(
+    ['facilities', ownerId],
+    ([path, ownerId], { next }) => {
+      if (!ownerId) {
+        next(null, []);
+        return () => {};
+      }
+      const ref = query(collection(db, 'facilities'), where('ownerId', '==', ownerId));
+      const unsub = onSnapshot(
+        ref,
+        (snapshot) => {
+          const facilities = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          next(null, facilities);
+        },
+        (err) => next(err, null)
+      );
+      return () => unsub();
+    }
+  );
+console.log("Owned Facilities:", data);
+  return {
+    data: data || [],
+    error: error?.message,
+    isLoading: data === undefined,
+  };
+}
+
+// Hook to fetch bookings for a list of facility IDs
+export function useOwnedBookings({ facilityIds }) {
+  const { data, error } = useSWRSubscription(
+    ['bookings', facilityIds],
+    ([path, facilityIds], { next }) => {
+      if (!facilityIds || facilityIds.length === 0) {
+        next(null, []);
+        return () => {};
+      }
+
+      const bookings = [];
+      const unsubs = facilityIds.map((facilityId) => {
+        const ref = collection(db, `facilities/${facilityId}/bookings`);
+        return onSnapshot(
+          ref,
+          (snapshot) => {
+            const facilityBookings = snapshot.docs.map((doc) => ({
+              id: doc.id,
+              facilityId,
+              ...doc.data(),
+            }));
+            // Update bookings array and trigger next with the combined bookings
+            bookings.length = 0; // Clear previous bookings
+            bookings.push(...facilityBookings);
+            next(null, [...bookings]); // Spread to ensure a new array
+          },
+          (err) => next(err, null)
+        );
+      });
+
+      return () => unsubs.forEach((unsub) => unsub());
+    }
+  );
+console.log("Owned Bookings",data)
+  return {
+    data: data || [],
+    error: error?.message,
+    isLoading: data === undefined,
+  };
+}

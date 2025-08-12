@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useUser } from '@/firebase/user/read';
 import { updateUser } from '@/firebase/user/update';
 import { toast } from 'react-hot-toast';
@@ -20,6 +20,7 @@ const EditUser = () => {
   });
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState({});
+  const router = useRouter()
 
   useEffect(() => {
     if (user) {
