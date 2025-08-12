@@ -8,10 +8,7 @@ Team Members :- Rushikesh Gaikwad, Shashank Wagde
 Problem Statements:- 1) QuickCourt - A Local Sports Booking
 
 
-<iframe width="560" height="315"
-  src="https://www.youtube.com/embed/4QHRkmLYrwA"
-  title="YouTube video player"
-  frameborder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowfullscreen>
-</iframe>
+[![Watch the video](https://img.youtube.com/vi/4QHRkmLYrwA/hqdefault.jpg)](https://youtu.be/4QHRkmLYrwA)
+
+**Demo video:** Click the image to watch on YouTube
+.
