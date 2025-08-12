@@ -8,7 +8,7 @@ import { Button } from "@heroui/button";
 import { useFacility } from "@/firebase/facilities/read_hooks";
 import { Card, CardHeader, CardBody } from "@heroui/card";
 import { useAllReviews } from "@/firebase/reviews/read";
-import { TrashIcon } from "lucide-react";
+import { TrashIcon, Star } from "lucide-react";
 import { deleteReview } from "@/firebase/reviews/delete";
 
 // Custom Rating Component
@@ -16,16 +16,12 @@ const CustomRating = ({ value, max = 5 }) => {
   return (
     <div className="flex items-center">
       {[...Array(max)].map((_, i) => (
-        <svg
+        <Star
           key={i}
-          className={`w-4 h-4 ${i < value ? 'text-yellow-400' : 'text-gray-300'}`}
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-        </svg>
+          className={`w-4 h-4 ${i < value ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+        />
       ))}
-      <span className="ml-1 text-sm text-gray-500">{value}.0</span>
+      <span className="ml-2 text-sm text-gray-600 font-medium">{value}.0</span>
     </div>
   );
 };
@@ -114,67 +110,69 @@ const ShowReviews = () => {
   }
 
   return (
-    <Card className="w-full shadow-lg">
-      <CardHeader className="pb-0">
-        <h2 className="text-xl font-bold text-gray-800">User Reviews</h2>
-      </CardHeader>
+    <Card className="w-full shadow-lg rounded-xl overflow-hidden">
+      {/* <CardHeader className="text-purple-600  pb-4">
+        <h2 className="text-xl font-bold">User Reviews</h2>
+      </CardHeader> */}
       
-      <CardBody>
+      <CardBody className="p-0">
         {reviews && reviews.length > 0 ? (
-          <div className="space-y-6">
+          <div className="divide-y divide-gray-100">
             {reviews.map((item, index) => (
               <div
                 key={generateReviewKey(item, index)}
-                className="relative flex gap-4 p-4 border border-gray-200 rounded-lg hover:shadow-sm transition-shadow"
+                className="relative p-5 hover:bg-purple-50 transition-colors"
               >
-                <Button
-                  isIconOnly
-                  className="absolute top-3 right-3 bg-red-50 hover:bg-red-100 text-red-500 min-w-0 h-8 w-8"
-                  onPress={() => handleDeleteReview(item?.facilityId, item?.reviewId)}
-                  isLoading={isDeleting === `${item?.facilityId}-${item?.reviewId}`}
-                  aria-label="Delete review"
-                >
-                  <TrashIcon className="w-4 h-4" />
-                </Button>
-                
-                <div className="flex-shrink-0">
-                  <div className="bg-gray-100 text-gray-700 text-xs font-medium px-2 py-1 rounded-full">
-                    {index + 1 + lastSnapDocList.length * itemsPerPage}
-                  </div>
-                </div>
-                
-                <div className="flex-shrink-0">
-                  <Avatar url={item?.photoURL || "/user-profile.jpg"} />
-                </div>
-                
-                <div className="flex-1 min-w-0">
-                  <div className="mb-2">
-                    <ReviewedProduct facilityId={item?.facilityId} />
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0">
+                    <div className="bg-purple-100 text-purple-800 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">
+                      {index + 1 + lastSnapDocList.length * itemsPerPage}
+                    </div>
                   </div>
                   
-                  <div className="mb-1">
-                    <h4 className="font-semibold text-gray-900">{item?.userName || 'Anonymous User'}</h4>
-                    <CustomRating value={item?.rating || 0} />
-                  </div>
-                  
-                  <div className="mt-2">
-                    <p className="text-gray-700">{item?.comment || 'No review content'}</p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap justify-between gap-2 mb-3">
+                      <div>
+                        <ReviewedProduct facilityId={item?.facilityId} />
+                      </div>
+                      <Button
+                        isIconOnly
+                        className="bg-red-50 hover:bg-red-100 text-red-500 min-w-0 h-8 w-8"
+                        onPress={() => handleDeleteReview(item?.facilityId, item?.reviewId)}
+                        isLoading={isDeleting === `${item?.facilityId}-${item?.reviewId}`}
+                        aria-label="Delete review"
+                      >
+                        <TrashIcon className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    
+                    <div className="flex items-center gap-3 mb-3">
+                      <Avatar url={item?.photoURL || "/user-profile.jpg"} className="w-10 h-10" />
+                      <div>
+                        <h4 className="font-semibold text-gray-900">{item?.userName || 'Anonymous User'}</h4>
+                        <CustomRating value={item?.rating || 0} />
+                      </div>
+                    </div>
+                    
+                    <div className="mt-2 pl-1">
+                      <p className="text-gray-700">{item?.comment || 'No review content'}</p>
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-10">
+          <div className="text-center py-12">
             <div className="text-gray-400 mb-2">No reviews found</div>
             <p className="text-gray-500">There are no reviews to display</p>
           </div>
         )}
         
         {reviews && reviews.length > 0 && (
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8 pt-6 border-t border-gray-100">
+          <div className="mt-0 border-t border-gray-100 p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <Button
-              className="bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-4 rounded-lg"
+              className="bg-purple-100 hover:bg-purple-200 text-purple-700 py-2 px-4 rounded-lg min-w-[120px]"
               onPress={handlePrePage}
               isDisabled={lastSnapDocList.length === 0}
             >
@@ -184,7 +182,7 @@ const ShowReviews = () => {
             <div className="flex items-center gap-2">
               <span className="text-gray-600 text-sm">Items per page:</span>
               <select
-                className="bg-gray-100 rounded-lg outline-none p-2 text-sm border border-gray-200"
+                className="bg-purple-50 rounded-lg outline-none p-2 text-sm border border-purple-200 focus:ring-2 focus:ring-purple-500"
                 value={itemsPerPage}
                 onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
               >
@@ -195,7 +193,7 @@ const ShowReviews = () => {
             </div>
             
             <Button
-              className="bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-4 rounded-lg"
+              className="bg-purple-100 hover:bg-purple-200 text-purple-700 py-2 px-4 rounded-lg min-w-[120px]"
               onPress={handleNextPage}
               isDisabled={!reviews || reviews.length < itemsPerPage}
             >
@@ -215,8 +213,8 @@ const ReviewedProduct = ({ facilityId }) => {
 
   if (isLoading) {
     return (
-      <div className="inline-block bg-gray-100 px-2 py-1 rounded-md text-xs">
-        <div className="w-20 h-3 bg-gray-200 animate-pulse rounded"></div>
+      <div className="inline-block bg-purple-100 px-2 py-1 rounded-md text-xs">
+        <div className="w-20 h-3 bg-purple-200 animate-pulse rounded"></div>
       </div>
     );
   }
