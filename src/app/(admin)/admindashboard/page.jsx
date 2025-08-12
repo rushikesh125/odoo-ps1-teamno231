@@ -90,7 +90,7 @@ const AdminDashboardPage = () => {
           <p className="text-2xl font-bold text-gray-900 mt-1">{value}</p>
         </div>
         <div className="p-3 rounded-lg bg-indigo-50">
-          <Icon className="h-6 w-6 text-indigo-600" />
+          <Icon className="h-6 w-6 text-theme-purple" />
         </div>
       </div>
       {change && (
@@ -144,7 +144,7 @@ const AdminDashboardPage = () => {
     return (
       <div className="flex justify-center items-center min-h-[500px]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-theme-purple mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading dashboard...</p>
         </div>
       </div>
@@ -278,7 +278,7 @@ const AdminDashboardPage = () => {
       <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
-          <button className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+          <button className="text-sm font-medium text-theme-purple hover:text-theme-purple">
             View all
           </button>
         </div>

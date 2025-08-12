@@ -221,7 +221,7 @@ const BookingModal = ({ facility, sport, court, onClose, user }) => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 py-3.5 px-4 bg-theme-purple text-white rounded-xl hover:bg-indigo-700 font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed shadow-md hover:shadow-lg flex items-center justify-center"
+                className="flex-1 py-3.5 px-4 bg-theme-purple text-white rounded-xl hover:bg-theme-purple font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed shadow-md hover:shadow-lg flex items-center justify-center"
               >
                 {isSubmitting ? (
                   <>

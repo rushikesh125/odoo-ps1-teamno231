@@ -96,7 +96,7 @@ const FacilityDetailPage = () => {
             <p className="mt-1 text-gray-500">This facility doesn't exist or was removed.</p>
             <button
               onClick={() => router.push("/explore")}
-              className="mt-4 px-4 py-2 bg-theme-purple text-white rounded hover:bg-indigo-700"
+              className="mt-4 px-4 py-2 bg-theme-purple text-white rounded hover:bg-theme-purple"
             >
               Browse Facilities
             </button>
@@ -167,7 +167,7 @@ const FacilityDetailPage = () => {
                 </button>
                 <button
                   onClick={() => router.push(`/contact?facility=${facilityId}`)}
-                  className="flex items-center justify-center px-5 py-3 bg-theme-purple text-white rounded-xl hover:bg-indigo-700 hover:shadow-lg transition-all transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-theme-purple focus:ring-opacity-50"
+                  className="flex items-center justify-center px-5 py-3 bg-theme-purple text-white rounded-xl hover:bg-theme-purple hover:shadow-lg transition-all transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-theme-purple focus:ring-opacity-50"
                 >
                   <Mail size={18} className="mr-2" />
                   <span className="font-medium">Contact</span>
@@ -277,7 +277,7 @@ const FacilityDetailPage = () => {
                 </div>
                 <button
                   onClick={() => setIsBookingModalOpen(true)}
-                  className="w-full mt-6 py-4 bg-theme-purple text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors shadow-md"
+                  className="w-full mt-6 py-4 bg-theme-purple text-white font-medium rounded-xl hover:bg-theme-purple transition-colors shadow-md"
                 >
                   Book Now
                 </button>

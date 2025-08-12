@@ -93,7 +93,7 @@ const AdminUsersPage = () => {
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-8">
+        <div className="bg-gradient-to-r from-purple-600 to-theme-purple px-6 py-8">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-white">Manage Users</h1>
             <p className="mt-2 text-indigo-100">
@@ -183,7 +183,7 @@ const AdminUsersPage = () => {
                           <div className="flex items-center justify-center space-x-2">
                             <Link
                               href={`/admindashboard/users/edit?id=${user.id}`}
-                              className="text-indigo-600 hover:text-indigo-900 p-1.5 rounded-md hover:bg-indigo-50 transition-colors"
+                              className="text-theme-purple hover:text-indigo-900 p-1.5 rounded-md hover:bg-indigo-50 transition-colors"
                               title="Edit User"
                             >
                               <Edit className="h-4 w-4" />

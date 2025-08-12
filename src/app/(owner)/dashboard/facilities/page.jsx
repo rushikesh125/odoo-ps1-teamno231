@@ -62,7 +62,7 @@ const FacilitiesPage = () => {
     return (
       <div className="flex justify-center items-center min-h-[500px]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-theme-purple mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading your facilities...</p>
         </div>
       </div>
@@ -78,7 +78,7 @@ const FacilitiesPage = () => {
         </div>
         <Link
           href="/dashboard/facilities/create"
-          className="mt-4 md:mt-0 inline-flex items-center px-4 py-2.5 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+          className="mt-4 md:mt-0 inline-flex items-center px-4 py-2.5 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-theme-purple hover:bg-theme-purple focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-purple transition-colors duration-200"
         >
           <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
           Add Facility
@@ -88,7 +88,7 @@ const FacilitiesPage = () => {
       {facilities.length === 0 ? (
         <div className="text-center py-16 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50">
           <div className="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-indigo-100">
-            <svg className="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="h-8 w-8 text-theme-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
           </div>
@@ -99,7 +99,7 @@ const FacilitiesPage = () => {
           <div className="mt-6">
             <Link
               href="/dashboard/facilities/create"
-              className="inline-flex items-center px-4 py-2.5 border border-transparent shadow-sm text-base font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+              className="inline-flex items-center px-4 py-2.5 border border-transparent shadow-sm text-base font-medium rounded-lg text-white bg-theme-purple hover:bg-theme-purple focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-purple transition-colors duration-200"
             >
               <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
               Create New Facility

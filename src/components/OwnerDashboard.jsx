@@ -104,7 +104,7 @@ export default function OwnerDashboardLayout({ children }) {
                 >
                   <item.icon
                     size={20}
-                    className="mr-3 text-gray-500 group-hover:text-indigo-600"
+                    className="mr-3 text-gray-500 group-hover:text-theme-purple"
                   />
                   <span className="font-medium">{item.name}</span>
                 </a>
@@ -116,7 +116,7 @@ export default function OwnerDashboardLayout({ children }) {
         {/* User Section */}
         <div className="p-4 border-t border-gray-100">
           <div className="flex items-center mb-3">
-            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-medium">
+            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-theme-purple font-medium">
               {user?.name?.charAt(0)?.toUpperCase() || <User size={16} />}
             </div>
             <div className="ml-3">
@@ -144,7 +144,7 @@ export default function OwnerDashboardLayout({ children }) {
             {/* Mobile Menu Toggle */}
             <div className="flex items-center">
               <button
-                className="mr-3 text-gray-600 lg:hidden hover:text-indigo-600"
+                className="mr-3 text-gray-600 lg:hidden hover:text-theme-purple"
                 onClick={() => setSidebarOpen(true)}
               >
                 <Menu size={24} />
@@ -167,7 +167,7 @@ export default function OwnerDashboardLayout({ children }) {
               </div>
 
               {/* Notifications */}
-              <button className="p-2 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-all">
+              <button className="p-2 text-gray-500 hover:text-theme-purple hover:bg-indigo-50 rounded-full transition-all">
                 <Bell size={20} />
                 <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>

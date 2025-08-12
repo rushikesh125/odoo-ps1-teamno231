@@ -30,7 +30,7 @@ const CourtCard = ({ court, sport, onBook }) => {
           disabled={court.status !== 'active'}
           className={`w-full py-3 px-4 rounded-xl font-medium transition-all ${
             court.status === 'active'
-              ? 'bg-theme-purple text-white hover:bg-indigo-700 shadow-md'
+              ? 'bg-theme-purple text-white hover:bg-theme-purple shadow-md'
               : 'bg-gray-200 text-gray-500 cursor-not-allowed'
           }`}
         >

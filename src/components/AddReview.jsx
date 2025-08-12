@@ -104,7 +104,7 @@ const AddReview = ({ facilityId,user }) => {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full mt-4 py-2.5 bg-theme-purple text-white font-medium rounded-lg hover:bg-indigo-700 disabled:opacity-70 disabled:cursor-not-allowed transition-colors shadow-sm flex items-center justify-center"
+          className="w-full mt-4 py-2.5 bg-theme-purple text-white font-medium rounded-lg hover:bg-theme-purple disabled:opacity-70 disabled:cursor-not-allowed transition-colors shadow-sm flex items-center justify-center"
         >
           {isLoading ? (
             <>

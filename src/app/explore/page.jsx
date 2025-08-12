@@ -191,7 +191,7 @@
 //                                     variant="ghost"
 //                                     size="sm"
 //                                     onClick={resetFilters}
-//                                     className="text-theme-purple hover:text-indigo-700"
+//                                     className="text-theme-purple hover:text-theme-purple"
 //                                 >
 //                                     Reset
 //                                 </Button>
@@ -312,7 +312,7 @@
 //                                 <MapPin className="mx-auto h-16 w-16 text-gray-300 mb-4" />
 //                                 <h3 className="text-xl font-bold text-gray-900 mb-2">No facilities found</h3>
 //                                 <p className="text-gray-600 mb-6">Try adjusting your filters or search terms</p>
-//                                 <Button onClick={resetFilters} className="bg-theme-purple hover:bg-indigo-700">
+//                                 <Button onClick={resetFilters} className="bg-theme-purple hover:bg-theme-purple">
 //                                     Reset Filters
 //                                 </Button>
 //                             </div>
@@ -558,7 +558,7 @@ const ExplorePage = () => {
                                     variant="ghost"
                                     size="sm"
                                     onClick={resetFilters}
-                                    className="text-theme-purple hover:text-indigo-700"
+                                    className="text-theme-purple hover:text-theme-purple"
                                 >
                                     Reset
                                 </Button>
@@ -679,7 +679,7 @@ const ExplorePage = () => {
                                 <MapPin className="mx-auto h-16 w-16 text-gray-300 mb-4" />
                                 <h3 className="text-xl font-bold text-gray-900 mb-2">No facilities found</h3>
                                 <p className="text-gray-600 mb-6">Try adjusting your filters or search terms</p>
-                                <Button onClick={resetFilters} className="bg-theme-purple hover:bg-indigo-700">
+                                <Button onClick={resetFilters} className="bg-theme-purple hover:bg-theme-purple">
                                     Reset Filters
                                 </Button>
                             </div>

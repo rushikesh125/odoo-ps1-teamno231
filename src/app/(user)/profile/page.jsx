@@ -287,7 +287,7 @@ const UserProfile = () => {
     <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
         {/* Profile Header with Gradient */}
-        <div className="bg-gradient-to-r from-theme-purple to-indigo-600 px-6 py-8 relative">
+        <div className="bg-gradient-to-r from-theme-purple to-theme-purple px-6 py-8 relative">
           <div className="absolute inset-0 bg-black bg-opacity-10"></div>
           <div className="relative z-10 flex flex-col md:flex-row items-center gap-6">
             <div className="relative group">

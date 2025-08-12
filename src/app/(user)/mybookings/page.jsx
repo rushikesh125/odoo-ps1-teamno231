@@ -88,7 +88,7 @@ const MyBookingsPage = () => {
           <p className="text-gray-600 mb-6">We couldn't load your bookings at the moment</p>
           <Button 
             onClick={() => router.push("/explore")}
-            className="bg-theme-purple hover:bg-indigo-700"
+            className="bg-theme-purple hover:bg-theme-purple"
           >
             Explore Facilities
           </Button>
@@ -117,7 +117,7 @@ const MyBookingsPage = () => {
           </p>
           <Button 
             onClick={() => router.push("/explore")}
-            className="bg-theme-purple hover:bg-indigo-700 text-base py-3 px-6"
+            className="bg-theme-purple hover:bg-theme-purple text-base py-3 px-6"
           >
             Explore Facilities
           </Button>

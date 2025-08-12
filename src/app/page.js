@@ -67,7 +67,7 @@ export default function Home() {
               />
               <button
                 type="submit"
-                className="bg-theme-purple hover:bg-indigo-700 text-white px-8 py-4 font-medium transition-colors flex items-center"
+                className="bg-theme-purple hover:bg-theme-purple text-white px-8 py-4 font-medium transition-colors flex items-center"
               >
                 <Search className="mr-2" size={20} />
                 Search
@@ -82,7 +82,7 @@ export default function Home() {
             <h2 className="text-3xl font-bold text-gray-900">Popular Venues</h2>
             <button
               onClick={() => router.push('/explore')}
-              className="text-theme-purple hover:text-indigo-700 font-medium flex items-center"
+              className="text-theme-purple hover:text-theme-purple font-medium flex items-center"
             >
               View All
               <svg className="ml-2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -100,7 +100,7 @@ export default function Home() {
               <p className="text-red-700 font-medium">Failed to load facilities. Please try again later.</p>
               <button 
                 onClick={() => window.location.reload()}
-                className="mt-4 px-4 py-2 bg-theme-purple text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                className="mt-4 px-4 py-2 bg-theme-purple text-white rounded-lg hover:bg-theme-purple transition-colors"
               >
                 Retry
               </button>
