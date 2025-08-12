@@ -19,6 +19,9 @@ import {
   Shield,
   ShieldUser,
   UserCheckIcon,
+  UserCog,
+  UserStar,
+  SquareChartGantt,
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
@@ -47,11 +50,10 @@ export default function OwnerDashboardLayout({ children }) {
   const menuItems = [
     { name: 'Admin Dashboard', icon: ShieldUser, href: '/admindashboard' },
     { name: 'Admins ', icon: Users, href: '/admindashboard/admins' },
-    { name: 'Facilities', icon: BarChart3, href: '/admindashboard/facilities' },
-    { name: 'Reviews', icon: FileText, href: '/admindashboard/reviews' },
+    { name: 'Facilities', icon: SquareChartGantt, href: '/admindashboard/facilities' },
+    { name: 'Reviews', icon: UserStar, href: '/admindashboard/reviews' },
     { name: 'Customer Bookings', icon: UserCheckIcon, href: '/admindashboard/bookings' },
-    { name: 'Users', icon: Calendar, href: '/admindashboard/users' },
-    { name: 'Settings', icon: Settings, href: '/admindashboard/settings' },
+    { name: 'Users', icon: UserCog, href: '/admindashboard/users' },
   ];
 
   useEffect(() => {
